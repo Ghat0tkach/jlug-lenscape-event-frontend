@@ -110,13 +110,6 @@ interface TeamMember {
   
           if (incomingUserData) {
             setUser(incomingUserData);
-            setTeamMembers([{ 
-              name: incomingUserData.name, 
-              email: incomingUserData.email, 
-              branch: '', 
-              collegeName: '', 
-              userId: incomingUserData._id 
-            }]);
           } else {
             toast.error("Unable to fetch user details. Please login again.");
             router.push('/?error=auth_failed');
@@ -210,6 +203,16 @@ interface TeamMember {
   };
 
   const handleNextStep = async () => {
+    if(user!=null){
+      setTeamMembers([{ 
+        name: user.name, 
+        email: user.email, 
+        branch: '', 
+        collegeName: '', 
+        userId: user._id 
+      }]);
+    }
+    
     if (currentStep === 0) {
       if (!branch || !collegeName) {
         toast.error("Branch and College Name are required.");
@@ -246,7 +249,6 @@ interface TeamMember {
         setCurrentStep(1);
       }
     } else {
-     
       if (!await validateSubmission()) {
         return;
       }
@@ -255,6 +257,7 @@ interface TeamMember {
         toast.error("Team name is required.");
         return;
       }
+    
       const memberIndex = teamMembers.findIndex(member => member.userId === user?._id);
       teamMembers[memberIndex].branch = branch;
       teamMembers[memberIndex].collegeName = collegeName;
